@@ -1,24 +1,29 @@
 import { QRCodeGenerator } from "@/components/QRCodeGenerator";
-import { Link } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Smartphone, Globe, Palette, ImageIcon, Check, Users, Store, Share2, DownloadIcon } from 'lucide-react';
+import logo from '../assets/Get QR lOGI/get-qr-logo.png'
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      <div className="container px-4 py-16 mx-auto">
-        <div className="text-center mb-12 space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-            QR Code Generator
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Generate beautiful QR codes for your website, business, or personal use. Simply enter your URL and customize your QR code.
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 pt-20">
+        <div className="text-center">
+            <div className="flex justify-center my-10">
+                {logo && (
+                    <Link to="/">
+                      <img
+                        src={logo}
+                        alt="Brand Logo"/>
+                    </Link>
+                )}
+          </div>
         </div>
-        
-        <div className="flex justify-center">
+        <div>
           <QRCodeGenerator />
-        </div>
+         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

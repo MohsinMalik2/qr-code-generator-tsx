@@ -1,12 +1,12 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Link, Mail, Phone, Text, ImageIcon, ArrowRight, UploadIcon, DownloadIcon } from 'lucide-react';
 import QRCode from "qrcode";
-import { Download, Link, Mail, Phone, Text, Upload } from "lucide-react";
 import imageCompression from "browser-image-compression";
 
 type DataType = "url" | "text" | "email" | "phone";
@@ -24,7 +24,7 @@ export const QRCodeGenerator = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -164,122 +164,164 @@ export const QRCodeGenerator = () => {
         return <Text className="w-4 h-4" />;
     }
   };
-
   return (
-    <Card className="w-full max-w-md p-6 space-y-6 animate-fade-in">
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label>Data Type</Label>
-          <Select
-            value={data.type}
-            onValueChange={(value: DataType) => setData({ ...data, type: value, value: "" })}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="url">URL</SelectItem>
-              <SelectItem value="text">Text</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
-              <SelectItem value="phone">Phone</SelectItem>
-            </SelectContent>
-          </Select>
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Create Your Custom QR Code
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Generate professional QR codes for your business. Add your brand colors and logo to make them truly yours.
+          </p>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="value">Enter {data.type}</Label>
-          <div className="flex space-x-2">
-            <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                {getIcon()}
-              </span>
-              <Input
-                id="value"
-                type={data.type === "email" ? "email" : "text"}
-                placeholder={getPlaceholder()}
-                value={data.value}
-                onChange={(e) => setData({ ...data, value: e.target.value })}
-                className="pl-10"
-              />
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Input Section */}
+          <Card className="p-6 space-y-6">
+            <div className="space-y-6">
+              {/* Data Type Selector */}
+              <div className="space-y-2">
+                <Label className="text-base font-semibold">What would you like to share?</Label>
+                <Select
+                  value={data.type}
+                  onValueChange={(value: DataType) => setData({ ...data, type: value, value: "" })}
+                >
+                  <SelectTrigger className="h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="url">Website URL</SelectItem>
+                    <SelectItem value="text">Plain Text</SelectItem>
+                    <SelectItem value="email">Email Address</SelectItem>
+                    <SelectItem value="phone">Phone Number</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Content Input */}
+              <div className="space-y-2">
+                <Label className="text-base font-semibold">
+                  Enter your {data.type === "url" ? "website address" : data.type}
+                </Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                    {getIcon()}
+                  </span>
+                  <Input
+                    value={data.value}
+                    onChange={(e) => setData({ ...data, value: e.target.value })}
+                    placeholder={getPlaceholder()}
+                    className="pl-10 h-12"
+                  />
+                </div>
+              </div>
+
+              {/* Customization Section */}
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="font-semibold">Customize Your QR Code</h3>
+                
+                {/* Color Picker */}
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0">
+                    <Label htmlFor="color" className="sr-only">Color</Label>
+                    <Input
+                      id="color"
+                      type="color"
+                      value={color}
+                      onChange={(e) => setColor(e.target.value)}
+                      className="w-12 h-12 p-1 rounded-lg"
+                    />
+                  </div>
+                  <span className="text-sm text-gray-600">
+                    Pick a color that matches your brand
+                  </span>
+                </div>
+
+                {/* Logo Upload */}
+                <div className="space-y-2">
+                  <Label className="text-sm text-gray-600">Add your logo (optional)</Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-12"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <UploadIcon className="w-4 h-4 mr-2" />
+                      {logo ? "Change Logo" : "Upload Logo"}
+                    </Button>
+                    {logo && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        className="h-12"
+                        onClick={() => setLogo(null)}
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                <Button 
+                  onClick={generateQRCode} 
+                  className="w-full h-12 bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Generate QR Code
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
             </div>
-            <Button onClick={generateQRCode} className="bg-primary hover:bg-primary-600">
-              Generate
-            </Button>
-          </div>
-        </div>
+          </Card>
 
-        <div className="space-y-2">
-          <Label htmlFor="color">QR Code Color</Label>
-          <div className="flex space-x-2">
-            <Input
-              id="color"
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              className="w-16 p-1 h-10"
-            />
-            <span className="flex items-center text-sm text-gray-500">
-              Choose QR code color
-            </span>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="logo">Brand Logo</Label>
-          <div className="flex space-x-2">
-            <Input
-              ref={fileInputRef}
-              id="logo"
-              type="file"
-              accept="image/*"
-              onChange={handleLogoUpload}
-              className="hidden"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              {logo ? "Change Logo" : "Upload Logo"}
-            </Button>
-            {logo && (
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => setLogo(null)}
-              >
-                Remove
-              </Button>
+          {/* Preview Section */}
+          <Card className="p-6 flex flex-col items-center justify-center bg-white/50 backdrop-blur-sm">
+            {qrCode ? (
+              <div className="space-y-6 w-full">
+                <div className="flex justify-center">
+                  <div className="relative bg-white p-8 rounded-xl shadow-lg">
+                    <img src={qrCode} alt="QR Code" className="w-64 h-64" />
+                    {logo && (
+                      <img
+                        src={logo}
+                        alt="Brand Logo"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 object-contain"
+                      />
+                    )}
+                  </div>
+                </div>
+                <Button
+                  onClick={downloadQRCode}
+                  className="w-full h-12 bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  <DownloadIcon className="w-4 h-4 mr-2" />
+                  Download QR Code
+                </Button>
+              </div>
+            ) : (
+              <div className="text-center p-8">
+                <div className="w-48 h-48 border-4 border-dashed border-gray-200 rounded-lg mb-4 flex items-center justify-center mx-auto">
+                  <span className="text-gray-400">Your QR Code will appear here</span>
+                </div>
+                <p className="text-sm text-gray-500">
+                  Fill in your details and click Generate to create your QR code
+                </p>
+              </div>
             )}
-          </div>
+          </Card>
         </div>
       </div>
-
-      {qrCode && (
-        <div className="space-y-4">
-          <div className="flex justify-center">
-            <div className="relative">
-              <img src={qrCode} alt="QR Code" className="w-64 h-64" />
-              {logo && (
-                <img
-                  src={logo}
-                  alt="Brand Logo"
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 object-contain"
-                />
-              )}
-            </div>
-          </div>
-          <Button
-            onClick={downloadQRCode}
-            className="w-full bg-secondary hover:bg-secondary/90"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Download QR Code
-          </Button>
-        </div>
-      )}
-    </Card>
+    </div>
   );
 };
+
+export default QRCodeGenerator;
